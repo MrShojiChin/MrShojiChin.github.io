@@ -3,6 +3,7 @@
 <head>
     <title>Car Accessories</title>
     <link rel="stylesheet" href="/css/global.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
 </head>
 <body>
     <h1>Car Accessories</h1>
@@ -14,9 +15,9 @@
         <option value="30">Phone Holder</option>
         <!-- Add more options here -->
     </select>
+
     <input type="number" id="amount-input" min="1" value="1">
     <button class="add-button" onclick="addItem()">Add</button>
- 
  
     <h2>Product List</h2>
     <table id="product-list">
@@ -31,40 +32,35 @@
     <h2>VAT (7%): <span id="vat-amount">$0</span></h2>
     <h2>Total Price After VAT: <span id="total-price-vat">$0</span></h2>
     
- 
-    
     <script>
+    var totalPrice = 0;
+
     function addItem() {
-        var accessorySelect = document.getElementById("accessory-select");
-        var selectedAccessory = accessorySelect.options[accessorySelect.selectedIndex].text;
-        var selectedAccessoryValue = accessorySelect.options[accessorySelect.selectedIndex].value;
-        var amountInput = document.getElementById("amount-input");
-        var amount = parseInt(amountInput.value);
+        var selectedAccessory = $("#accessory-select option:selected").text();
+        var selectedAccessoryValue = $("#accessory-select").val();
+        var amount = parseInt($("#amount-input").val());
         var price = parseFloat(selectedAccessoryValue);
 
-        var productTable = document.getElementById("product-list");
-        var row = productTable.insertRow(-1);
-        var accessoryCell = row.insertCell(0);
-        var amountCell = row.insertCell(1);
-        var priceCell = row.insertCell(2);
+        var newRow = `<tr>
+            <td>${selectedAccessory}</td>
+            <td>${amount}</td>
+            <td>$${(price * amount).toFixed(2)}</td>
+            </tr>`;
+        $("#product-list").append(newRow);
 
-        accessoryCell.innerHTML = selectedAccessory;
-        amountCell.innerHTML = amount;
-        priceCell.innerHTML = "$" + (price * amount).toFixed(2);
-
-        var totalPriceElement = document.getElementById("total-price");
-        var currentTotalPrice = parseFloat(totalPriceElement.innerHTML.substring(1));
-        var newTotalPrice = currentTotalPrice + (price * amount);
+        totalPrice += price * amount;
+        $("#total-price").text(`$${totalPrice.toFixed(2)}`);
 
         var vatRate = 0.07;
-        var vatAmount = newTotalPrice * vatRate;
-        var totalPriceAfterVAT = newTotalPrice + vatAmount;
+        var vatAmount = totalPrice * vatRate;
+        var totalPriceAfterVAT = totalPrice + vatAmount;
 
-        
-        totalPriceElement.innerHTML = "$" + newTotalPrice.toFixed(2);
-        document.getElementById("vat-amount").innerHTML = "$" + vatAmount.toFixed(2);
-        document.getElementById("total-price-vat").innerHTML = "$" + totalPriceAfterVAT.toFixed(2);
+        $("#vat-amount").text(`$${vatAmount.toFixed(2)}`);
+        $("#total-price-vat").text(`$${totalPriceAfterVAT.toFixed(2)}`);
     }
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html></select>
